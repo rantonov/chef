@@ -1,7 +1,6 @@
 # the Environment variable is one of {dev|test|prod}
 
 script "linkconfigs" do
-Chef::Log.info("USER_ID: #{node[:deploy]['simplephpapp'][:environment_variables][:USER_ID]}")
 		interpreter "bash"
 		user "root"
 		code <<-EOH
