@@ -1,36 +1,12 @@
 <?php
-/** 
- * The base configurations of the WordPress.
- *
- * This file has the following configurations: MySQL settings, Table Prefix,
- * Secret Keys, WordPress Language, and ABSPATH. You can find more information by
- * visiting {@link http://codex.wordpress.org/Editing_wp-config.php Editing
- * wp-config.php} Codex page. You can get the MySQL settings from your web host.
- *
- * This file is used by the wp-config.php creation script during the
- * installation. You don't have to use the web site, you can just copy this file
- * to "wp-config.php" and fill in the values.
- *
- * @package WordPress
- */
 
 // ** MySQL settings - You can get this info from your web host ** //
-/** The name of the database for WordPress */
+
 define('DB_NAME', '<%= @database %>');
-
-/** MySQL database username */
 define('DB_USER', '<%= @user %>');
-
-/** MySQL database password */
 define('DB_PASSWORD', '<%= @password %>');
-
-/** MySQL hostname */
 define('DB_HOST', '<%= @host %>');
-
-/** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
-
-/** The Database Collate type. Don't change this if in doubt. */
 define('DB_COLLATE', '');
 
 /**
@@ -43,6 +19,7 @@ define('DB_COLLATE', '');
  * @since 2.6.0
  */
 <%= @keys %>
+
 
 <% if node['wordpress']['wp_config']['enable_W3TC']==true -%>
 /** 
@@ -60,10 +37,10 @@ define('FORCE_SSL_LOGIN', true);
 define('FORCE_SSL_ADMIN', true);
 <% end -%>
 
-/**
- * Use external cron
- */
-define('DISABLE_WP_CRON', true);
+/** Added to recognize the X-Forwarded-Proto header */
+if ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')
+       $_SERVER['HTTPS']='on';
+
 
 /**
  * WordPress Database Table prefix.
@@ -72,6 +49,27 @@ define('DISABLE_WP_CRON', true);
  * prefix. Only numbers, letters, and underscores please!
  */
 $table_prefix  = 'wp_';
+
+/**  Environment Variables */
+define('VAR_ENV', '' );
+define('VAR_WWW', '/' );
+define('MAIN_URL', '/');
+
+// Configuration for batcache 
+global $memcached_servers;
+$memcached_servers = array('default' => array('localhost:50007'));
+
+
+//// Configuration for object cache and batcache @link https://wiki.automotive.com:8888/display/PHP/WordPress+Object-Cache.php+with+Couchbase
+$couchbaseCacheGroups = array(
+    'default' => array(
+        //'scheme(not used but required for url parts)://username:password@host:port/bucket',
+        'http://lifestyle:M3mB45e!sTh3%y5t3M@haw-ap-couchbase:8091/lifestyle',
+    ),
+);
+
+
+
 
 /**
  * WordPress Localized Language, defaults to English.
@@ -82,6 +80,9 @@ $table_prefix  = 'wp_';
  * language support.
  */
 define ('WPLANG', '');
+define('WP_DEBUG', false);
+
+
 
 /* That's all, stop editing! Happy blogging. */
 

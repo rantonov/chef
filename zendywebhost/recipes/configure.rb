@@ -1,7 +1,6 @@
 # AWS OpsWorks Recipe for Wordpress to be executed during the Configure lifecycle phase
 # - Creates the config file wp-config.php with MySQL data.
-# - Creates a Cronjob.
-# - Imports a database backup if it exists.
+# - Imports a database backup if a *.sql file exists in the current htdocs directory exists.
 
 require 'uri'
 require 'net/http'
@@ -14,6 +13,7 @@ http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 request = Net::HTTP::Get.new(uri.request_uri)
 response = http.request(request)
 keys = response.body
+
 
 
 # Create the Wordpress config file wp-config.php with corresponding values
@@ -56,12 +56,4 @@ node[:deploy].each do |app_name, deploy|
 		EOH
 	end
 	
-end
-
-# Create a Cronjob for Wordpress
-cron "wordpress" do
-  hour "*"
-  minute "*/15"
-  weekday "*"
-  command "wget -q -O - http://localhost/wp-cron.php?doing_wp_cron >/dev/null 2>&1"
 end
