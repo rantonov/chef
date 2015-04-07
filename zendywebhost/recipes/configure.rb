@@ -30,6 +30,7 @@ end
 # Create the Wordpress config file wp-config.php with corresponding values
 node[:deploy].each do |app_name, deploy|
 	if #{deploy[:deploy_to]}.include? "wordpress"
+		Chef::Log.debug("Creating wp-config.php for #{deploy[:deploy_to]}...")
 		template "#{deploy[:deploy_to]}/current/wp-config.php" do
 			source "wp-config.php.erb"
 			mode 0660
@@ -51,6 +52,8 @@ node[:deploy].each do |app_name, deploy|
 				
 			end
 		end
+		else
+			Chef::Log.debug("Skipping wp-config.php for #{deploy[:deploy_to]}...")
 	end
 
 script "linkconfigs" do
