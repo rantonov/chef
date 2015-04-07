@@ -53,15 +53,14 @@ node[:deploy].each do |app_name, deploy|
 	else
 		Chef::Log.debug("Skipping wp-config.php for #{deploy[:deploy_to]}...")
 	end
-end
-
-script "linkconfigs" do
+	script "linkconfigs" do
 		interpreter "bash"
 		user "root"
 		code <<-EOH
 			rm -rf #{deploy[:deploy_to]}/current/wp-content;
 			ln -s /srv/www/zh_wordpress/shared/content #{deploy[:deploy_to]}/current/wp-content;
 		EOH
+	end
 end
 
 
