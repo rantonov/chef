@@ -56,8 +56,11 @@ node[:deploy].each do |app_name, deploy|
 		interpreter "bash"
 		user "root"
 		code <<-EOH
-			rm -rf #{deploy[:deploy_to]}/current/wp-content;
-			ln -s /srv/www/zh_wordpress/shared/content #{deploy[:deploy_to]}/current/wp-content;
+				WP_CONTENT=#{deploy[:deploy_to]}/current/wp-content;
+				if ! [[ -L "$WP_CONTENT" && -d "$WP_CONTENT" ]]; then
+					rm -rf $WP_CONTENT;
+					ln -s /srv/www/zh_wordpress/shared/content #{deploy[:deploy_to]}/current/wp-content;
+				fi
 		EOH
 	end
 end
