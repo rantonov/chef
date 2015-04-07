@@ -52,16 +52,19 @@ node[:deploy].each do |app_name, deploy|
 	else
 		Chef::Log.debug("Skipping wp-config.php for #{deploy[:deploy_to]}...")
 	end
-	script "linkconfigs" do
-		interpreter "bash"
-		user "root"
-		code <<-EOH
-				WP_CONTENT=#{deploy[:deploy_to]}/current/wp-content;
-				if ! [[ -L "$WP_CONTENT" && -d "$WP_CONTENT" ]]; then
-					rm -rf $WP_CONTENT;
-					ln -s /srv/www/zh_wordpress/shared/content #{deploy[:deploy_to]}/current/wp-content;
-				fi
-		EOH
+	
+	if "#{deploy[:deploy_to]}".include? "wordpress"
+		script "linkconfigs" do
+			interpreter "bash"
+			user "root"
+			code <<-EOH
+					WP_CONTENT=#{deploy[:deploy_to]}/current/wp-content;
+					if ! [[ -L "$WP_CONTENT" && -d "$WP_CONTENT" ]]; then
+						rm -rf $WP_CONTENT;
+						ln -s /srv/www/zh_wordpress/shared/content #{deploy[:deploy_to]}/current/wp-content;
+					fi
+			EOH
+		end
 	end
 end
 
