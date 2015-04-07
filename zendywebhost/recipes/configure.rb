@@ -51,9 +51,9 @@ node[:deploy].each do |app_name, deploy|
 			)
 				
 			end
-		end
 		else
 			Chef::Log.debug("Skipping wp-config.php for #{deploy[:deploy_to]}...")
+		end
 	end
 
 script "linkconfigs" do
