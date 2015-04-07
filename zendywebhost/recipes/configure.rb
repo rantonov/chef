@@ -29,17 +29,17 @@ end
 
 # Create the Wordpress config file wp-config.php with corresponding values
 node[:deploy].each do |app_name, deploy|
-	if #{deploy[:deploy_to]}.include? "wordpress"
-		Chef::Log.debug("Creating wp-config.php for #{deploy[:deploy_to]}...")
+	if #{deploy[:deploy_to]}.to_s.include? "wordpress"
+		Chef::Log.info("Creating wp-config.php for #{deploy[:deploy_to]}...")
 		template "#{deploy[:deploy_to]}/current/wp-config.php" do
 			source "wp-config.php.erb"
 			mode 0660
 			group deploy[:group]
 
 			if platform?("ubuntu")
-			owner "www-data"
+				owner "www-data"
 			elsif platform?("amazon")
-			owner "apache"
+				owner "apache"
 			end
 
 			variables(
@@ -49,12 +49,11 @@ node[:deploy].each do |app_name, deploy|
 				:host       => (deploy[:database][:host] rescue nil),
 				:keys       => (keys rescue nil)
 			)
-				
-			end
-		else
-			Chef::Log.debug("Skipping wp-config.php for #{deploy[:deploy_to]}...")
 		end
+	else
+		Chef::Log.debug("Skipping wp-config.php for #{deploy[:deploy_to]}...")
 	end
+end
 
 script "linkconfigs" do
 		interpreter "bash"
