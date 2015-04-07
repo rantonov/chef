@@ -14,6 +14,17 @@ request = Net::HTTP::Get.new(uri.request_uri)
 response = http.request(request)
 keys = response.body
 
+script "mountcontent" do
+		interpreter "bash"
+		user "root"
+		code <<-EOH
+		apt-get install nfs-kernel-server;
+			if ! grep "wp-content" -qs /proc/mounts; then 
+				mkdir -p /srv/www/zh_wordpress/shared/content;
+				mount -t nfs 10.0.1.16:/usr/share/nas/wp-content  /srv/www/zh_wordpress/shared/content
+			fi
+		EOH
+end
 
 
 # Create the Wordpress config file wp-config.php with corresponding values
@@ -38,6 +49,15 @@ node[:deploy].each do |app_name, deploy|
             :keys       => (keys rescue nil)
         )
     end
+
+script "linkconfigs" do
+		interpreter "bash"
+		user "root"
+		code <<-EOH
+			rm -rf #{deploy[:deploy_to]}/current/wp-content;
+			ln -s /srv/www/zh_wordpress/shared/content #{deploy[:deploy_to]}/current/wp-content;
+		EOH
+end
 
 
 	# Import Wordpress database backup from file if it exists
