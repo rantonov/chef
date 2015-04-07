@@ -29,7 +29,7 @@ end
 
 # Create the Wordpress config file wp-config.php with corresponding values
 node[:deploy].each do |app_name, deploy|
-	if i"#{deploy[:deploy_to]}".include? "wordpress"
+	if "#{deploy[:deploy_to]}".include? "wordpress"
 		Chef::Log.info("Creating wp-config.php for #{deploy[:deploy_to]}...")
 		template "#{deploy[:deploy_to]}/current/wp-config.php" do
 			source "wp-config.php.erb"
