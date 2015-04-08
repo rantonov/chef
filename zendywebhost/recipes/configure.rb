@@ -1,9 +1,14 @@
 # AWS OpsWorks Recipe for Wordpress to be executed during the Configure lifecycle phase
-# - Creates the config file wp-config.php with MySQL data.
+# - Creates the config file wp-config.php and links things.
 
 require 'uri'
 require 'net/http'
 require 'net/https'
+
+
+include_recipe 'apache2::mod_proxy'
+include_recipe 'apache2::mod_proxy_http'
+
 
 uri = URI.parse("https://api.wordpress.org/secret-key/1.1/salt/")
 http = Net::HTTP.new(uri.host, uri.port)
