@@ -70,7 +70,7 @@ node[:deploy].each do |app_name, deploy|
 			interpreter "bash"
 			user "root"
 			code <<-EOH
-					sed -i "/HessianServiceUrl/c\    define('HessianServiceUrl', 'http://internal-dev-api-lb-75921361.us-west-2.elb.amazonaws.com:8080/zendyhealthapi/services');" #{deploy[:deploy_to]}/current/application/config/application.config.php ;
+					sed -i "/HessianServiceUrl/c\    define('HessianServiceUrl', \'#{deploy[:zh_website][:api]}\');" #{deploy[:deploy_to]}/current/application/config/application.config.php ;
 			EOH
 		end
 	elsif "#{deploy[:deploy_to]}".include? "admin"
@@ -78,7 +78,7 @@ node[:deploy].each do |app_name, deploy|
 			interpreter "bash"
 			user "root"
 			code <<-EOH
-					sed -i "/HessianServiceUrl/c\\$this->AddRow('HessianServiceUrl', 'http://internal-dev-api-lb-75921361.us-west-2.elb.amazonaws.com:8080/zendyhealthapi/services');" #{deploy[:deploy_to]}/current/app/data/setting.db.php ;
+					sed -i "/HessianServiceUrl/c\\$this->AddRow('HessianServiceUrl', \'#{deploy[:zh_admin][:api]}\');" #{deploy[:deploy_to]}/current/app/data/setting.db.php ;
 			EOH
 		end	
 	end
