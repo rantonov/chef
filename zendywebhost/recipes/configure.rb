@@ -66,26 +66,19 @@ node[:deploy].each do |app_name, deploy|
 			EOH
 		end
 	elsif "#{deploy[:deploy_to]}".include? "website"
-		script "configurewebsite" do
-		Chef::Log.info("************* deploy[:zh_website] =#{deploy[:zh_website]}...*************")
-		Chef::Log.info("************* deploy[:zh_website][:api] =#{deploy[:zh_website][:api]}...*************")
-		Chef::Log.info("************* deploy[:deploy_to][:api] =#{deploy[:deploy_to]}...*************")
-		
+		script "configurewebsite" do	
 			interpreter "bash"
 			user "root"
 			code <<-EOH
-					sed -i "/HessianServiceUrl/c\    define('HessianServiceUrl', \'#{deploy[:zh_website][:api]}\');" #{deploy[:deploy_to]}/current/application/config/application.config.php ;
+					sed -i "/HessianServiceUrl/c\    define('HessianServiceUrl', 'http://internal-dev-api-lb-75921361.us-west-2.elb.amazonaws.com:8080/zendyhealthapi/services');" #{deploy[:deploy_to]}/current/application/config/application.config.php ;
 			EOH
 		end
 	elsif "#{deploy[:deploy_to]}".include? "admin"
-		Chef::Log.info("************* deploy[:zh_admin] =#{deploy[:zh_admin]}...*************")
-		Chef::Log.info("************* deploy[:zh_admin][:api] =#{deploy[:zh_admin][:api]}...*************")
-		Chef::Log.info("************* deploy[:deploy_to][:api] =#{deploy[:deploy_to]}...*************")
 		script "configureadmin" do
 			interpreter "bash"
 			user "root"
 			code <<-EOH
-					sed -i "/HessianServiceUrl/c\\$this->AddRow('HessianServiceUrl', \'#{deploy[:zh_admin][:api]}\');" #{deploy[:deploy_to]}/current/app/data/setting.db.php ;
+					sed -i "/HessianServiceUrl/c\\$this->AddRow('HessianServiceUrl', 'http://internal-dev-api-lb-75921361.us-west-2.elb.amazonaws.com:8080/zendyhealthapi/services');" #{deploy[:deploy_to]}/current/app/data/setting.db.php ;
 			EOH
 		end	
 	end
