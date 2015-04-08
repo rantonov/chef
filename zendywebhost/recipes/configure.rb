@@ -29,7 +29,7 @@ end
 # Create the Wordpress config file wp-config.php with corresponding values
 node[:deploy].each do |app_name, deploy|
 	if "#{deploy[:deploy_to]}".include? "wordpress"
-		Chef::Log.info("Creating wp-config.php for #{deploy[:deploy_to]}...")
+		Chef::Log.info("*********** Creating wp-config.php for #{deploy[:deploy_to]}...*************")
 		template "#{deploy[:deploy_to]}/current/wp-config.php" do
 			source "wp-config.php.erb"
 			mode 0660
@@ -50,7 +50,7 @@ node[:deploy].each do |app_name, deploy|
 			)
 		end
 	else
-		Chef::Log.debug("Skipping wp-config.php for #{deploy[:deploy_to]}...")
+		Chef::Log.info("************* Skipping wp-config.php for #{deploy[:deploy_to]}...*************")
 	end
 	
 	if "#{deploy[:deploy_to]}".include? "wordpress"
@@ -61,10 +61,26 @@ node[:deploy].each do |app_name, deploy|
 					WP_CONTENT=#{deploy[:deploy_to]}/current/wp-content;
 					if ! [[ -L "$WP_CONTENT" && -d "$WP_CONTENT" ]]; then
 						rm -rf $WP_CONTENT;
-						ln -s /srv/www/zh_wordpress/shared/content #{deploy[:deploy_to]}/current/wp-content;
+						ln -s /srv/www/zh_wordpress/shared/content $WP_CONTENT;
 					fi
 			EOH
 		end
+	elseif "#{deploy[:deploy_to]}".include? "website"
+		script "configurewebsite" do
+			interpreter "bash"
+			user "root"
+			code <<-EOH
+					sed -i "/HessianServiceUrl/c\    define('HessianServiceUrl', 'http://internal-dev-api-lb-75921361.us-west-2.elb.amazonaws.com:8080/zendyhealthapi/services');" #{deploy[:deploy_to]}/current/application/config/application.config.php ;
+			EOH
+		end
+	elseif "#{deploy[:deploy_to]}".include? "admin"
+		script "configureadmin" do
+			interpreter "bash"
+			user "root"
+			code <<-EOH
+					sed -i "/HessianServiceUrl/c\\$this->AddRow('HessianServiceUrl', 'http://internal-dev-api-lb-75921361.us-west-2.elb.amazonaws.com:8080/zendyhealthapi/services');" #{deploy[:deploy_to]}/current/app/data/setting.db.php ;
+			EOH
+		end	
 	end
 end
 
