@@ -67,6 +67,10 @@ node[:deploy].each do |app_name, deploy|
 		end
 	elsif "#{deploy[:deploy_to]}".include? "website"
 		script "configurewebsite" do
+		Chef::Log.info("************* deploy[:zh_website] =#{deploy[:zh_website]}...*************")
+		Chef::Log.info("************* deploy[:zh_website][:api] =#{deploy[:zh_website][:api]}...*************")
+		Chef::Log.info("************* deploy[:deploy_to][:api] =#{deploy[:deploy_to]}...*************")
+		
 			interpreter "bash"
 			user "root"
 			code <<-EOH
@@ -74,6 +78,9 @@ node[:deploy].each do |app_name, deploy|
 			EOH
 		end
 	elsif "#{deploy[:deploy_to]}".include? "admin"
+		Chef::Log.info("************* deploy[:zh_admin] =#{deploy[:zh_admin]}...*************")
+		Chef::Log.info("************* deploy[:zh_admin][:api] =#{deploy[:zh_admin][:api]}...*************")
+		Chef::Log.info("************* deploy[:deploy_to][:api] =#{deploy[:deploy_to]}...*************")
 		script "configureadmin" do
 			interpreter "bash"
 			user "root"
