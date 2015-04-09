@@ -1,21 +1,11 @@
 # AWS OpsWorks Recipe for Wordpress to be executed during the Configure lifecycle phase
 # - Creates the config file wp-config.php and links things.
 
-require 'uri'
-require 'net/http'
-require 'net/https'
-
 
 include_recipe 'apache2::mod_proxy'
 include_recipe 'apache2::mod_proxy_http'
 
 
-uri = URI.parse("https://api.wordpress.org/secret-key/1.1/salt/")
-http = Net::HTTP.new(uri.host, uri.port)
-http.use_ssl = true
-http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-request = Net::HTTP::Get.new(uri.request_uri)
-response = http.request(request)
 keys = response.body
 
 script "mountcontent" do
@@ -51,7 +41,7 @@ node[:deploy].each do |app_name, deploy|
 				:user       => (deploy[:database][:username] rescue nil),
 				:password   => (deploy[:database][:password] rescue nil),
 				:host       => (deploy[:database][:host] rescue nil),
-				:keys       => (keys rescue nil)
+				:keys       => (deploy[:salt] rescue nil)
 			)
 		end
 	else
