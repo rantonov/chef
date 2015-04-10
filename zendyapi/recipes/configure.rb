@@ -4,14 +4,16 @@
 
 # Create the config.properties 
 node[:deploy].each do |app_name, deploy|
+
 	if "#{deploy[:deploy_to]}".include? "zendyhealthapi"
 		
 		%w[ #{deploy[:deploy_to]}/ops #{deploy[:deploy_to]}/ops/zendyhealthapi #{deploy[:deploy_to]}/ops/zendyhealthapi/conf ].each do |path|
-		directory path do
-			owner 'apache'
-			group 'deploy'
-			mode '0777'
-			action 'create'
+			directory path do
+				owner 'apache'
+				group 'deploy'
+				mode '0777'
+				action 'create'
+			end
 		end
 
 		Chef::Log.info("*********** Creating API properties for #{deploy[:deploy_to]}...*************")
@@ -57,14 +59,10 @@ node[:deploy].each do |app_name, deploy|
 			)
 		end
 		
-		script "linkops" do
-			interpreter "bash"
-			user "root"
-			code <<-EOH
-					rm -rf /usr/share/tomcat7/ops;
-					ln -s #{deploy[:deploy_to]}/ops /usr/share/tomcat7/ ;
-					# service tomcat7 restart;
-			EOH
+		link "#{deploy[:deploy_to]}/ops" do
+			to "/usr/share/tomcat7/"
+			mode "0777"
+			owner "root"
 		end
 		
 	end
