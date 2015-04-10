@@ -18,7 +18,7 @@ node[:deploy].each do |app_name, deploy|
 		Chef::Log.info("*********** Creating API properties for #{deploy[:deploy_to]}...*************")
 		template "#{deploy[:deploy_to]}/ops/zendyhealthapi/conf/config.properties" do
 			source "config.properties.erb"
-			mode 0660
+			mode 0777
 			group deploy[:group]
 			owner "apache"
 
