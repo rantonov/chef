@@ -4,10 +4,10 @@
 
 # Create the config.properties 
 node[:deploy].each do |app_name, deploy|
-
+	
 	if "#{deploy[:deploy_to]}".include? "zendyhealthapi"
 		
-		%w[ #{deploy[:deploy_to]}/ops #{deploy[:deploy_to]}/ops/zendyhealthapi #{deploy[:deploy_to]}/ops/zendyhealthapi/conf ].each do |path|
+		%w[ "#{deploy[:deploy_to]}/ops" "#{deploy[:deploy_to]}/ops/zendyhealthapi" "#{deploy[:deploy_to]}/ops/zendyhealthapi/conf" ].each do |path|
 			directory path do
 				owner 'apache'
 				group 'deploy'
