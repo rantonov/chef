@@ -23,10 +23,10 @@ node[:deploy].each do |app_name, deploy|
 			owner "apache"
 
 			variables(
-				:db_url			=> (deploy[:database][:username] rescue nil),
+				:db_url			=> (deploy[:database][:host] rescue nil),
 				:db_dbname		=> (deploy[:database][:database] rescue nil),
-				:db_username   	=> (deploy[:database][:password] rescue nil),
-				:db_password    => (deploy[:database][:host] rescue nil),
+				:db_username   	=> (deploy[:database][:username] rescue nil),
+				:db_password    => (deploy[:database][:password] rescue nil),
 
 				:site_url		=> (deploy[:site_urls][:this] rescue nil),
 				:admin_site_url => (deploy[:site_urls][:admin] rescue nil),
