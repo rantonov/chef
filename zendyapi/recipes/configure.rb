@@ -58,8 +58,8 @@ node[:deploy].each do |app_name, deploy|
 			)
 		end
 		
-		link "#{deploy[:deploy_to]}/ops" do
-			to "/usr/share/tomcat7/"
+		link "/usr/share/tomcat7/ops" do
+			to "#{deploy[:deploy_to]}/ops"
 			mode "0777"
 			owner "root"
 		end
