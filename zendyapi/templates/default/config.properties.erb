@@ -1,0 +1,24 @@
+hibernate.connection.driver_class=com.tw.persistence.hibernate.PGDriverCustom
+hibernate.connection.url=jdbc:postgresql_PGCustom://<%= @db_url %>/<%= @db_dbname %>
+hibernate.connection.username=<%= @db_username %>
+hibernate.connection.password=<%= @db_password %>
+
+site_url=<%= @site_url %>
+
+admin_site_url=<%= @admin_site_url %>
+
+
+#####stripe######
+stripe_key=<%= @stripe_key %>
+
+####paypal####
+paypal_config_file=<%= @paypal_config_file %>
+
+###### S3 ####
+S3Storage$bucketName=<%= @s3_bucket %>
+S3Auth$awsAccessKey=<%= @s3_key %>
+S3Auth$awsSecretKey=<%= @s3_secret %>
+
+####Jotform - for now common to all environments
+jotform.apikey=<%= @jotform_key %>
+
