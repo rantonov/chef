@@ -45,7 +45,7 @@ node[:deploy].each do |app_name, deploy|
 
 		Chef::Log.info("*********** Creating Logback configuration for #{deploy[:deploy_to]}...*************")
 		template "#{deploy[:deploy_to]}/ops/zendyhealthapi/conf/logback.xml" do
-			source "logback.xml.erb.erb"
+			source "logback.xml.erb"
 			mode 0660
 			group deploy[:group]
 			owner "apache"
