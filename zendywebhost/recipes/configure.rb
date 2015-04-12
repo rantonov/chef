@@ -39,7 +39,7 @@ node[:deploy].each do |app_name, deploy|
 			owner "root"
 
 			variables(
-				:host       => (deploy[:proxy][:base_url] rescue nil)
+				:proxy_base_url => (deploy[:proxy][:base_url] rescue nil)
 			)
 		end
 		
