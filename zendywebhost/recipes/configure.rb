@@ -5,17 +5,6 @@
 include_recipe 'apache2::mod_proxy'
 include_recipe 'apache2::mod_proxy_http'
 
-script "mountcontent" do
-		interpreter "bash"
-		user "root"
-		code <<-EOH
-		apt-get install nfs-kernel-server;
-			if ! grep "wp-content" -qs /proc/mounts; then 
-				mkdir -p /srv/www/zh_wordpress/shared/content;
-				mount -t nfs #{deploy[:nfs][:url]}  /srv/www/zh_wordpress/shared/content
-			fi
-		EOH
-end
 
 
 # Create the Wordpress config file wp-config.php with corresponding values
