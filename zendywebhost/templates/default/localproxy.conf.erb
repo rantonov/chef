@@ -1,0 +1,28 @@
+  KeepAlive On
+  MaxKeepAliveRequests 1000
+  KeepAliveTimeout 100
+#    SSLProxyEngine On
+
+  <Location /press>
+      ProxyPass <%= @proxy_base_url %>/press
+      ProxyPassReverse <%= @proxy_base_url %>/press
+      #Order allow,deny
+      Allow from all
+      Require all granted
+  </Location>
+
+
+  <Location /blog>
+      ProxyPass <%= @proxy_base_url %>/blog
+      ProxyPassReverse <%= @proxy_base_url %>/blog
+      #Order allow,deny
+      Allow from all
+      Require all granted
+  </Location>
+  <Location /wp-content>
+      ProxyPass <%= @proxy_base_url %>/wp-content
+      ProxyPassReverse <%= @proxy_base_url %>/wp-content
+      #Order allow,deny
+      Allow from all
+      Require all granted
+  </Location>
