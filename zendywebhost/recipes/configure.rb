@@ -12,7 +12,7 @@ script "mountcontent" do
 		apt-get install nfs-kernel-server;
 			if ! grep "wp-content" -qs /proc/mounts; then 
 				mkdir -p /srv/www/zh_wordpress/shared/content;
-				mount -t nfs 10.0.1.16:/usr/share/nas/wp-content  /srv/www/zh_wordpress/shared/content
+				mount -t nfs #{deploy[:nfs][:url]}  /srv/www/zh_wordpress/shared/content
 			fi
 		EOH
 end
@@ -41,11 +41,29 @@ node[:deploy].each do |app_name, deploy|
 				:keys       => (deploy[:salt] rescue nil)
 			)
 		end
-	else
-		Chef::Log.info("************* Skipping wp-config.php for #{deploy[:deploy_to]}...*************")
+	elsif "#{deploy[:deploy_to]}".include? "website"
+		Chef::Log.info("*********** Creating proxy config for #{deploy[:deploy_to]}...*************")
+		template "/etc/apache2/sites-available/zh_website.conf.d/localproxy.conf" do
+			source "localproxy.conf.erb"
+			mode 0660
+			group deploy[:group]
+			owner "root"
+
+			variables(
+				:host       => (deploy[:proxy][:base_url] rescue nil)
+			)
+		end
+		
 	end
 	
 	if "#{deploy[:deploy_to]}".include? "wordpress"
+
+#		link "#{deploy[:deploy_to]}/current/wp-content" do
+#			to "/srv/www/zh_wordpress/shared/content"
+#			mode "0777"
+#			owner "root"
+#		end
+		
 		script "linkconfigs" do
 			interpreter "bash"
 			user "root"
