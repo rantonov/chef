@@ -42,6 +42,36 @@ node[:deploy].each do |app_name, deploy|
 				:proxy_base_url => (deploy[:proxy][:base_url] rescue nil)
 			)
 		end
+
+		Chef::Log.info("*********** Creating application.config  for #{deploy[:deploy_to]}...*************")
+		template "#{deploy[:deploy_to]}/current/application/config/application.config.php" do
+			source "application.config.php.erb"
+			mode 0777
+			group deploy[:group]
+			owner "root"
+
+			variables(
+				:api_url => (deploy[:api][:url] rescue nil),
+				:environment => (deploy[:environment] rescue nil),
+				:admin_url => (deploy[:admin_site] rescue nil),
+				:s3_bucket => (deploy[:s3_bucket] rescue nil)
+			)
+		end
+
+	elsif "#{deploy[:deploy_to]}".include? "admin"	
+		Chef::Log.info("*********** Creating settings.db.php  for #{deploy[:deploy_to]}...*************")
+		template "#{deploy[:deploy_to]}/current/app/data/setting.db.php" do
+			source "setting.db.php.erb"
+			mode 0777
+			group deploy[:group]
+			owner "root"
+
+			variables(
+				:platformsoa_host => (deploy[:api][:host] rescue nil),
+				:site_url => (deploy[:main_site] rescue nil),
+				:s3_bucket => (deploy[:s3_bucket] rescue nil)
+			)
+		end
 		
 	end
 	

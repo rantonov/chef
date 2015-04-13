@@ -1,0 +1,24 @@
+<?php
+
+$this->AddRow('HessianServiceUrl', 'http://<%= @platformsoa_host %>/zendyhealthapi/services');
+$this->AddRow('UploadUrl', 'http://<%= @platformsoa_host %>/zendyhealthapi/file/upload');
+
+$host = $_SERVER['HTTP_HOST'];
+
+$this->AddRow('DownloadUrl', 'http://<%= @s3_bucket %>.s3.amazonaws.com/');
+
+$this->AddRow('APP_DEBUG_MODE', 'false');
+$this->AddRow('APP_DEV_MODE', 'false');
+$this->AddRow('APP_LIVE_MODE', 'false');
+$this->AddRow('APP_LOCAL_MODE', 'false');
+
+
+$this->AddRow('FRONT_END_SITE', 'https://<%= @site_url %>');
+       
+if ($host == '127.0.0.1' || $host == 'localhost')
+{
+    $this->AddRow('Environment', 'local');
+}else{
+    $this->AddRow('Environment', 'server');
+}
+?>
