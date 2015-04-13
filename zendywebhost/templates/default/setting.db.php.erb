@@ -13,7 +13,7 @@ $this->AddRow('APP_LIVE_MODE', 'false');
 $this->AddRow('APP_LOCAL_MODE', 'false');
 
 
-$this->AddRow('FRONT_END_SITE', 'https://<%= @site_url %>');
+$this->AddRow('FRONT_END_SITE', '<%= @site_url %>');
        
 if ($host == '127.0.0.1' || $host == 'localhost')
 {
