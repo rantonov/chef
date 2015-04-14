@@ -52,7 +52,7 @@ node[:deploy].each do |app_name, deploy|
 
 			variables(
 				:api_url => (deploy[:api][:url] rescue nil),
-				:environment => (deploy[:denvironment] rescue nil),
+				:environment => (deploy[:zhenvironment] rescue nil),
 				:admin_url => (deploy[:admin_site] rescue nil),
 				:s3_bucket => (deploy[:s3_bucket] rescue nil)
 			)
