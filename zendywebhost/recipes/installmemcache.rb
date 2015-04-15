@@ -13,7 +13,7 @@ script "installmemcache" do
 	interpreter "bash"
 	user "root"
 	code <<-EOH
-		apt-get -y install php5-memcache memcached;
+		apt-get -y install php5-memcache ;
 		echo '*********** configure memcached *************'
 		cat /etc/memcached.conf > memcached.conf.orig
 
