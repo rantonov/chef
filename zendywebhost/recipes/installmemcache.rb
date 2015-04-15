@@ -2,7 +2,7 @@
 session_save_path=""
 
 node[:opsworks][:layers]['php-app'][:instances].each do | instance |
-	session_save_path << "tcp://"<<"#{instance[:private_ip].to_s}"<<":11211,"
+	session_save_path << "tcp://"<<"#{instance[:private_ip]}"<<":11211,"
 end
 session_save_path=session_save_path.chop #the last comma
 
