@@ -38,16 +38,16 @@ script "installmemcache" do
 		echo '*********** configure php to use memcached for sessions *************'
 		if grep "^\ *session.save_path" /etc/php5/apache2/php.ini ; then
 			echo '*********** the line exists *************'
-			echo sed -i \"/^session.save_path/c\ session.save_path=#{session_save_path}\" /etc/php5/apache2/php.ini;
-			sed -i "/^session.save_path/c\ session.save_path=#{session_save_path}" /etc/php5/apache2/php.ini;
+			cat /etc/php5/apache2/php.ini | sed "/^session.save_path/c\ session.save_path=#{session_save_path}" > /etc/php5/apache2/php.ini.new;
+			cp /etc/php5/apache2/php.ini.new /etc/php5/apache2/php.ini;
 		else
 			echo '*********** the line is new *************'
-			echo sed -i \"/^;.*session.save_path = \\"N;\/path/c\ session.save_path=#{session_save_path}\" /etc/php5/apache2/php.ini;
-			sed -i "/^;.*session.save_path = \"N;\/path/c\ session.save_path=#{session_save_path}" /etc/php5/apache2/php.ini;
+			cat /etc/php5/apache2/php.ini |sed "/^;.*session.save_path = \"N;\/path/c\ session.save_path=#{session_save_path}" > /etc/php5/apache2/php.ini.new;
+			cp /etc/php5/apache2/php.ini.new /etc/php5/apache2/php.ini;
 		fi
 		
-		echo sed -i \"/session.save_handler/c\ session.save_handler = memcache\" /etc/php5/apache2/php.ini;
-		sed -i "/session.save_handler/c\  session.save_handler = memcache" /etc/php5/apache2/php.ini;
+		cat /etc/php5/apache2/php.ini | sed "/session.save_handler/c\  session.save_handler = memcache" > /etc/php5/apache2/php.ini.new;
+		cp /etc/php5/apache2/php.ini.new /etc/php5/apache2/php.ini;
 				 
 	EOH
 end
