@@ -1,5 +1,7 @@
 
 session_save_path=""
+Chef::Log.info("********  Instances: #{node[:opsworks][:layers]['php-app'][:instances]} *************")
+
 
 node[:opsworks][:layers]['php-app'][:instances].each do | instance |
 	session_save_path << "tcp://"<<"#{instance[:private_ip]}"<<":11211,"
