@@ -1,11 +1,11 @@
-session_save_path=""
+session_save_path="\'"
 Chef::Log.info("********  Instances: #{node[:opsworks][:layers]['php-app'][:instances]} *************")
 
 
 node[:opsworks][:layers]['php-app'][:instances].each do | instance, conf |
 	session_save_path << "tcp://"<<"#{conf[:private_ip]}"<<":11211,"
 end
-session_save_path=session_save_path.chop #the last comma
+session_save_path=session_save_path.chop<<"\'" #the last comma
 
 Chef::Log.info("*********** memcache session.save_path=#{session_save_path}  *************")
 
@@ -22,14 +22,14 @@ script "installmemcache" do
 		
 		#configure php to use memcached for sessions
 		sed -i "/session.save_handler/c\  session.save_handler = memcache" /etc/php5/apache2/php.ini;
-		if grep "^session.save_path" /etc/php5/apache2/php.ini ; then
+		if grep "^\ *session.save_path" /etc/php5/apache2/php.ini ; then
 		# the line exists
-			sed -i "/^session.save_path/c\session.save_path=\'#{session_save_path}\'" /etc/php5/apache2/php.ini;
+				sed -i "/^session.save_path/c\ session.save_path=#{session_save_path}" /etc/php5/apache2/php.ini;
 		else
 		#this is a new def
-			echo session.save_path=\'#{session_save_path}\' >> /etc/php5/apache2/php.ini;
+				echo session.save_path=\\'#{session_save_path}\\' >> /etc/php5/apache2/php.ini;
 		fi
-		
+
 		#configure redundancy 
 		if ! grep "memcache\.allow_failover=1" /etc/php5/mods-available/memcache.ini ;  then
 			echo "memcache.allow_failover=1" >> /etc/php5/mods-available/memcache.ini;
