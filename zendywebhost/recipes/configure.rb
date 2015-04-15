@@ -67,7 +67,8 @@ node[:deploy].each do |app_name, deploy|
 					echo `host $PROXY_HOST | cut -d' ' -f4` $PROXY_HOST >> /etc/hosts; 
 				fi
 				# now configure memcached
-				cat /etc/memcached.conf  | sed "s/^-l 127\.0\.0\.1/-l `ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'`/" > /etc/memcached.conf;
+				cat /etc/memcached.conf  | sed "s/^-l 127\.0\.0\.1/-l `ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'`/" > /etc/memcached.conf.new;
+				mv /etc/memcached.conf.new /etc/memcached.conf;
 				echo "memcache.allow_failover=1" >> /etc/php5/mods-available/memcache.ini;
 				echo #{node[:opsworks][:layers]['php-app'][:instances]}.length+1 >> /etc/php5/mods-available/memcache.ini;
 			EOH
