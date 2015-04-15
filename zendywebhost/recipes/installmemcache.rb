@@ -16,18 +16,20 @@ script "installmemcache" do
 		apt-get -y install php5-memcache memcached;
 		# configure memcached
 		# change the server ip
+Chef::Log.info("*********** memcached.conf  *************")
+		cat /etc/memcached.conf > memcached.conf.orig
 		cat /etc/memcached.conf  | sed "s/127\.0\.0\.1/`ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'`/" > /etc/memcached.conf.new;
-		mv /etc/memcached.conf.new /etc/memcached.conf;
+		cp /etc/memcached.conf.new /etc/memcached.conf;
 		service memcached restart;
 		
 		#configure php to use memcached for sessions
 		sed -i "/session.save_handler/c\  session.save_handler = memcache" /etc/php5/apache2/php.ini;
 		if grep "^\ *session.save_path" /etc/php5/apache2/php.ini ; then
 		# the line exists
-				sed -i "/^session.save_path/c\ session.save_path=#{session_save_path}" /etc/php5/apache2/php.ini;
+			sed -i "/^session.save_path/c\ session.save_path=#{session_save_path}" /etc/php5/apache2/php.ini;
 		else
 		#this is a new def
-				echo session.save_path=\\'#{session_save_path}\\' >> /etc/php5/apache2/php.ini;
+			sed -i "/^;.*session.save_path = \"N;\/path/c\ session.save_path=#{session_save_path}" /etc/php5/apache2/php.ini;
 		fi
 
 		#configure redundancy 
