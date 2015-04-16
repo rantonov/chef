@@ -15,7 +15,7 @@ script "installmemcache" do
 	code <<-EOH
 		apt-get -y install php5-memcache ;
 		echo '*********** configure memcached *************'
-		cat /etc/memcached.conf > memcached.conf.orig
+		cp /etc/memcached.conf /etc/memcached.conf.orig
 
 		echo '*********** changing server ip *************'
 		cat /etc/memcached.conf  | sed "s/127\.0\.0\.1/`ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'`/" > /etc/memcached.conf.new;
