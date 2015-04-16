@@ -1,0 +1,3 @@
+# using Amazon ELB with SSL Termination
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule !/status https://%{SERVER_NAME}%{REQUEST_URI} [L,R]

@@ -42,6 +42,14 @@ node[:deploy].each do |app_name, deploy|
 				:proxy_base_url => (deploy[:proxy][:base_url] rescue nil)
 			)
 		end
+		
+		Chef::Log.info("*********** Creating rewrite.conf  for #{deploy[:deploy_to]}...*************")
+		template "/etc/apache2/sites-available/zh_website.conf.d/rewrite.conf" do
+			source "rewrite.conf.erb"
+			mode 0660
+			group deploy[:group]
+			owner "root"
+		end
 
 		Chef::Log.info("*********** Creating application.config  for #{deploy[:deploy_to]}...*************")
 		template "#{deploy[:deploy_to]}/current/application/config/application.config.php" do
@@ -57,6 +65,7 @@ node[:deploy].each do |app_name, deploy|
 				:s3_bucket => (deploy[:s3_bucket] rescue nil)
 			)
 		end
+	
 		
 		script "variousfiles" do
 			interpreter "bash"
