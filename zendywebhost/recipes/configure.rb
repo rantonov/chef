@@ -1,7 +1,3 @@
-# AWS OpsWorks Recipe for Wordpress to be executed during the Configure lifecycle phase
-# - Creates the config file wp-config.php and links things.
-
-
 include_recipe 'apache2::mod_proxy'
 include_recipe 'apache2::mod_proxy_http'
 
@@ -51,6 +47,28 @@ node[:deploy].each do |app_name, deploy|
 			owner "root"
 		end
 
+		Chef::Log.info("*********** Creating memcached.conf  for #{deploy[:deploy_to]}...*************")
+		template "/etc/memcached.conf" do
+			source "memcached.conf.erb"
+			mode 0660
+			group deploy[:group]
+			owner "root"
+			
+			variables(
+				:my_ip_address => (node[:opsworks][:instance][:private_ip] rescue nil)
+			)
+		end
+		
+		script "restartmemcached" do
+			interpreter "bash"
+			user "root"
+			code <<-EOH
+				service memcached restart;			
+			EOH
+		end
+		
+		include_recipe 'zendywebhost::configurememcache'
+		
 		Chef::Log.info("*********** Creating application.config  for #{deploy[:deploy_to]}...*************")
 		template "#{deploy[:deploy_to]}/current/application/config/application.config.php" do
 			source "application.config.php.erb"
