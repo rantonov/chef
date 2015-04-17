@@ -103,7 +103,8 @@ node[:deploy].each do |app_name, deploy|
 
 			variables(
 				:client_id		=> (deploy[:paypal][:client_id] rescue nil),
-				:client_secret  => (deploy[:paypal][:client_secret] rescue nil)
+				:client_secret  => (deploy[:paypal][:client_secret] rescue nil),
+				:endpoint		=> (deploy[:paypal][:endpoint] rescue nil)
 			)
 		end
 
