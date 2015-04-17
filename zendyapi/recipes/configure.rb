@@ -31,17 +31,20 @@ node[:deploy].each do |app_name, deploy|
 		end
 
 		#copy files
-		file "/usr/share/tomcat7/ops/zendyhealthapi/keystore/keystore.jks" do
+		cookbook_file  "/usr/share/tomcat7/ops/zendyhealthapi/keystore/keystore.jks" do
+		  source "keystore.jks"
 		  owner 'root'
 		  group 'tomcat'
 		  mode '0777'
 		end
-		file "/usr/share/tomcat7/ops/zendyhealthapi/conf/ehcache.xml" do
+		cookbook_file  "/usr/share/tomcat7/ops/zendyhealthapi/conf/ehcache.xml" do
+		  source "ehcache.xml"
 		  owner 'root'
 		  group 'tomcat'
 		  mode '0777'
 		end
-		file "/usr/share/tomcat7/ops/zendyhealthapi/conf/vcache.vcl" do
+		cookbook_file  "/usr/share/tomcat7/ops/zendyhealthapi/conf/vcache.vcl" do
+		  source "vcache.vcl"
 		  owner 'root'
 		  group 'tomcat'
 		  mode '0777'
