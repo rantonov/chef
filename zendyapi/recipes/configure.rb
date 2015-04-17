@@ -2,21 +2,54 @@
 # - Creates the Zendyhealth API config files
 
 
+
 # Create the config.properties 
 node[:deploy].each do |app_name, deploy|
 	
 	if "#{deploy[:deploy_to]}".include? "zendyhealthapi"
-		
-		directory "#{deploy[:deploy_to]}/ops/zendyhealthapi/conf" do
-			owner 'apache'
-			group 'deploy'
-			mode '0777'
-			recursive true
-			action 'create'
+	
+		#Create the ops directory structure
+		directory "/usr/share/tomcat7/ops" do
+		  owner 'root'
+		  group 'tomcat'
+		  mode '0777'
+		end
+		directory "/usr/share/tomcat7/ops/zendyhealthapi" do
+		  owner 'root'
+		  group 'tomcat'
+		  mode '0777'
+		end
+		directory "/usr/share/tomcat7/ops/zendyhealthapi/conf" do
+		  owner 'root'
+		  group 'tomcat'
+		  mode '0777'
+		end
+		directory "/usr/share/tomcat7/ops/zendyhealthapi/keystore" do
+		  owner 'root'
+		  group 'tomcat'
+		  mode '0777'
 		end
 
-		Chef::Log.info("*********** Creating API properties for #{deploy[:deploy_to]}...*************")
-		template "#{deploy[:deploy_to]}/ops/zendyhealthapi/conf/config.properties" do
+		#copy files
+		file "/usr/share/tomcat7/ops/zendyhealthapi/keystore/keystore.jks" do
+		  owner 'root'
+		  group 'tomcat'
+		  mode '0777'
+		end
+		file "/usr/share/tomcat7/ops/zendyhealthapi/conf/ehcache.xml" do
+		  owner 'root'
+		  group 'tomcat'
+		  mode '0777'
+		end
+		file "/usr/share/tomcat7/ops/zendyhealthapi/conf/vcache.vcl" do
+		  owner 'root'
+		  group 'tomcat'
+		  mode '0777'
+		end
+		
+
+		Chef::Log.info("*********** Creating API properties *************")
+		template "/usr/share/tomcat7/ops/zendyhealthapi/conf/config.properties" do
 			source "config.properties.erb"
 			mode 0777
 			group deploy[:group]
@@ -43,8 +76,8 @@ node[:deploy].each do |app_name, deploy|
 		end
 
 
-		Chef::Log.info("*********** Creating Logback configuration for #{deploy[:deploy_to]}...*************")
-		template "#{deploy[:deploy_to]}/ops/zendyhealthapi/conf/logback.xml" do
+		Chef::Log.info("*********** Creating Logback configuration  *************")
+		template "/usr/share/tomcat7/ops/zendyhealthapi/conf/logback.xml" do
 			source "logback.xml.erb"
 			mode 0777
 			group deploy[:group]
@@ -57,13 +90,20 @@ node[:deploy].each do |app_name, deploy|
 				:log_level    		=> (deploy[:logback][:log_level] rescue nil)
 			)
 		end
-		
-		link "/usr/share/tomcat7/ops" do
-			to "#{deploy[:deploy_to]}/ops"
-			mode "0777"
+
+		Chef::Log.info("*********** Creating Logback configuration  *************")
+		template "/usr/share/tomcat7/ops/zendyhealthapi/conf/paypal_config.properties" do
+			source "paypal_config.properties.erb"
+			mode 0777
+			group deploy[:group]
 			owner "root"
+
+			variables(
+				:client_id		=> (deploy[:paypal][:client_id] rescue nil),
+				:client_secret  => (deploy[:paypal][:client_secret] rescue nil)
+			)
 		end
-		
+
 		
 		bash '(re-)start autofs earlier' do
 		  user 'root'
