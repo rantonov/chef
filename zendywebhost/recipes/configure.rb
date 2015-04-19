@@ -111,6 +111,16 @@ node[:deploy].each do |app_name, deploy|
 			)
 		end
 		
+				
+		Chef::Log.info("*********** Creating rewrite.conf  for #{deploy[:deploy_to]}...*************")
+		template "/etc/apache2/sites-available/zh_admin.conf.d/rewrite.conf" do
+			source "rewrite.conf.erb"
+			mode 0660
+			group deploy[:group]
+			owner "root"
+		end
+
+		
 	end
 	
 	if "#{deploy[:deploy_to]}".include? "wordpress"
@@ -132,6 +142,16 @@ node[:deploy].each do |app_name, deploy|
 					fi
 			EOH
 		end
+		
+				
+		Chef::Log.info("*********** Creating rewrite.conf  for #{deploy[:deploy_to]}...*************")
+		template "/etc/apache2/sites-available/zh_wordpress.conf.d/rewrite.conf" do
+			source "rewrite.conf.erb"
+			mode 0660
+			group deploy[:group]
+			owner "root"
+		end
+
 	end
 end
 
