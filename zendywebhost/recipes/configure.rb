@@ -84,6 +84,32 @@ node[:deploy].each do |app_name, deploy|
 			)
 		end
 	
+		Chef::Log.info("*********** Creating index.php  for #{deploy[:deploy_to]}...*************")
+		template "#{deploy[:deploy_to]}/current/index.php" do
+			source "index.php.erb"
+			mode 0777
+			group deploy[:group]
+			owner "root"
+
+			variables(
+				:admin_url => (deploy[:admin_site] rescue nil),
+				:s3_bucket => (deploy[:s3_bucket] rescue nil)
+			)
+		end
+	
+		Chef::Log.info("*********** Creating mobile index.php  for #{deploy[:deploy_to]}...*************")
+		template "#{deploy[:deploy_to]}/current/mobile/index.php" do
+			source "mobile_index.php.erb"
+			mode 0777
+			group deploy[:group]
+			owner "root"
+
+			variables(
+				:admin_url => (deploy[:admin_site] rescue nil),
+				:s3_bucket => (deploy[:s3_bucket] rescue nil)
+			)
+		end
+	
 		
 		script "variousfiles" do
 			interpreter "bash"
