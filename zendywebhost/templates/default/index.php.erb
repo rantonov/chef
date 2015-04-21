@@ -20,7 +20,7 @@ require_once 'application/config/application.config.php';
  */
 //$this->output->enable_profiler(TRUE);
 if(!isset($admin_url)||$admin_url=='<%= @admin_url %>'){
-    $admin_url='<%= @admin_url %>/zb/';
+    $admin_url='<%= @admin_url %>';
 }
 
 define('ADMIN_URL', $admin_url);
