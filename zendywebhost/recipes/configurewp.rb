@@ -29,7 +29,7 @@ node[:deploy].each do |app_name, deploy|
 #			to "/srv/www/zh_wordpress/shared/content"
 #			mode "0777"
 #			owner "root"
-#		end
+#		end 
 		
 		script "linkconfigs" do
 			interpreter "bash"
