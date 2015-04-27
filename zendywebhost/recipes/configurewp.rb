@@ -25,6 +25,39 @@ node[:deploy].each do |app_name, deploy|
 			)
 		end #template
 		
+		
+				
+		Chef::Log.info("*********** Creating rewrite.conf  for #{deploy[:deploy_to]}...*************")
+		template "/etc/apache2/sites-available/zh_wordpress.conf.d/rewrite.conf" do
+			source "rewrite.conf.erb"
+			mode 0660
+			group deploy[:group]
+			owner "root"
+		end
+		
+		Chef::Log.info("*********** Creating memcached.conf  for #{deploy[:deploy_to]}...*************")
+		template "/etc/memcached.conf" do
+			source "memcached.conf.erb"
+			mode 0660
+			group deploy[:group]
+			owner "root"
+			
+			variables(
+				:my_ip_address => (node[:opsworks][:instance][:private_ip] rescue nil)
+			)
+		end
+		
+		script "restartmemcached" do
+			interpreter "bash"
+			user "root"
+			code <<-EOH
+				service memcached restart;			
+			EOH
+		end
+		
+		include_recipe 'zendywebhost::configurememcache'
+
+		
 #		link "#{deploy[:deploy_to]}/current/wp-content" do
 #			to "/srv/www/zh_wordpress/shared/content"
 #			mode "0777"
@@ -41,16 +74,7 @@ node[:deploy].each do |app_name, deploy|
 						ln -s /srv/www/zh_wordpress/shared/content $WP_CONTENT;
 					fi
 			EOH
-		end
-		
-				
-		Chef::Log.info("*********** Creating rewrite.conf  for #{deploy[:deploy_to]}...*************")
-		template "/etc/apache2/sites-available/zh_wordpress.conf.d/rewrite.conf" do
-			source "rewrite.conf.erb"
-			mode 0660
-			group deploy[:group]
-			owner "root"
-		end
+		end		
 	end	
 end
 
