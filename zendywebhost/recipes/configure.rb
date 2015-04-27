@@ -1,7 +1,7 @@
 include_recipe 'apache2::mod_proxy'
 include_recipe 'apache2::mod_proxy_http'
 
-# Create the Wordpress config file wp-config.php with corresponding values
+
 node[:deploy].each do |app_name, deploy|
 	if "#{deploy[:deploy_to]}".include? "website"
 		Chef::Log.info("*********** Creating proxy config for #{deploy[:deploy_to]}...*************")
