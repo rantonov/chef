@@ -87,17 +87,18 @@ node[:deploy].each do |app_name, deploy|
 			)
 		end
 	
-		
-		script "variousfiles" do
-			interpreter "bash"
-			user "root"
-			code <<-EOH
-				PROXY_HOST=#{deploy[:proxy][:host]};
-				if ! grep "$PROXY_HOST" /etc/hosts ; then 
-					echo `host $PROXY_HOST | cut -d' ' -f4` $PROXY_HOST >> /etc/hosts; 
-				fi
-			EOH
-		end
+
+	#  Create an entry for the proxy in the /etc/hosts 
+#		script "variousfiles" do
+#			interpreter "bash"
+#			user "root"
+#			code <<-EOH
+#				PROXY_HOST=#{deploy[:proxy][:host]};
+#				if ! grep "$PROXY_HOST" /etc/hosts ; then 
+#					echo `host $PROXY_HOST | cut -d' ' -f4` $PROXY_HOST >> /etc/hosts; 
+#				fi
+#			EOH
+#		end
 
 	elsif "#{deploy[:deploy_to]}".include? "admin"	
 		Chef::Log.info("*********** Creating settings.db.php  for #{deploy[:deploy_to]}...*************")
