@@ -74,7 +74,9 @@ node[:deploy].each do |app_name, deploy|
 				:s3_key       	=> (deploy[:s3][:key] rescue nil),
 				:s3_secret   	=> (deploy[:s3][:secret] rescue nil),
 
-				:jotform_key  	=> (deploy[:externals][:jotform] rescue nil)
+				:jotform_key  	=> (deploy[:externals][:jotform] rescue nil),
+				:sendgrid_key => (deploy[:externals][:sendgrid_key] rescue nil),
+				:sendgrid_password => (deploy[:externals][:sendgrid_password] rescue nil)
 			)
 		end
 
