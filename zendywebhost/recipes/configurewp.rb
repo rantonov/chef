@@ -61,8 +61,8 @@ node[:deploy].each do |app_name, deploy|
 			interpreter "bash"
 			user "root"
 			code <<-EOH
-				sed -i 	'/^upload_max_filesize/c\upload_max_filesize = 10M' /etc/php5/apache2/php.ini 		
-				sed -i 	'/^post_max_size/c\post_max_size = 10M' /etc/php5/apache2/php.ini 		
+				sed -i 	"/^upload_max_filesize/c\ upload_max_filesize = 10M" /etc/php5/apache2/php.ini 		
+				sed -i 	"/^post_max_size/c\ post_max_size = 10M" /etc/php5/apache2/php.ini 		
 			EOH
 		end
 
