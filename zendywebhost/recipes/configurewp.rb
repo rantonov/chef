@@ -57,6 +57,17 @@ node[:deploy].each do |app_name, deploy|
 		
 		include_recipe 'zendywebhost::configurememcache'
 
+		script "set_file_limits" do
+			interpreter "bash"
+			user "root"
+			code <<-EOH
+				sed -i 	'/^upload_max_filesize/c\upload_max_filesize = 10M' /etc/php5/apache2/php.ini 		
+				sed -i 	'/^post_max_size/c\post_max_size = 10M' /etc/php5/apache2/php.ini 		
+			EOH
+		end
+
+
+
 		
 #		link "#{deploy[:deploy_to]}/current/wp-content" do
 #			to "/srv/www/zh_wordpress/shared/content"
