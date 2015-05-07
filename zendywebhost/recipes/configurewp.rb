@@ -64,17 +64,7 @@ node[:deploy].each do |app_name, deploy|
 				sed -i 	"/^upload_max_filesize/c\ upload_max_filesize = 10M" /etc/php5/apache2/php.ini 		
 				sed -i 	"/^post_max_size/c\ post_max_size = 10M" /etc/php5/apache2/php.ini 		
 			EOH
-		end
-
-
-
-		
-#		link "#{deploy[:deploy_to]}/current/wp-content" do
-#			to "/srv/www/zh_wordpress/shared/content"
-#			mode "0777"
-#			owner "root"
-#		end 
-		
+		end		
 	end	
 end
 
