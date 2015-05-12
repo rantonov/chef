@@ -1,4 +1,4 @@
-file "robots.txt" do
+file "/srv/www/zh_website/current/robots.txt" do
   owner 'root'
   group 'root'
   mode '0777'
