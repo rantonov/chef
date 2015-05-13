@@ -21,7 +21,8 @@ node[:deploy].each do |app_name, deploy|
 				:user       => (deploy[:database][:username] rescue nil),
 				:password   => (deploy[:database][:password] rescue nil),
 				:host       => (deploy[:database][:host] rescue nil),
-				:keys       => (deploy[:salt] rescue nil)
+				:keys       => (deploy[:salt] rescue nil),
+				:frontend_url => (deploy[:frontend_url] rescue nil)
 			)
 		end #template
 		
