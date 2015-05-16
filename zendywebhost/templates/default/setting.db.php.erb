@@ -5,7 +5,7 @@ $this->AddRow('UploadUrl', 'http://<%= @platformsoa_host %>/zendyhealthapi/file/
 
 $host = $_SERVER['HTTP_HOST'];
 
-$this->AddRow('DownloadUrl', 'http://<%= @s3_bucket %>.s3.amazonaws.com/');
+$this->AddRow('DownloadUrl', 'https://<%= @s3_bucket %>.s3.amazonaws.com/');
 
 $this->AddRow('APP_DEBUG_MODE', 'false');
 $this->AddRow('APP_DEV_MODE', 'false');
