@@ -66,6 +66,12 @@ node[:deploy].each do |app_name, deploy|
 				sed -i 	"/^post_max_size/c\ post_max_size = 10M" /etc/php5/apache2/php.ini 		
 			EOH
 		end		
+		
+		execute "chmod_077" do
+		  cwd "#{deploy[:deploy_to]}/current"
+		  command "chmod -R 777 wp-content"
+		end
+		
 	end	
 end
 
