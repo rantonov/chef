@@ -72,6 +72,14 @@ node[:deploy].each do |app_name, deploy|
 		  command "chmod -R 777 wp-content"
 		end
 		
+		file "/srv/www/zh_wordpress/current/robots.txt" do
+		  owner 'root'
+		  group 'root'
+		  mode '0777'
+		  action :create
+		  content "User-agent: *\nDisallow: /"
+		end
+		
 	end	
 end
 
